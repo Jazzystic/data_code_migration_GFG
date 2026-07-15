@@ -15,6 +15,9 @@ Migrates the consolidated weekly rankings dataset — roughly 57 columns spannin
 - Duplicate detection against the target table's composite key, distinguishing true duplicates from rows sharing key columns but differing elsewhere
 - Batched inserts via `psycopg2.extras.execute_batch`
 
+### `migración_histórico_rankingstable_GFG.ipynb`
+Migrates the weekly rankings table. Same pipeline shape as the others: column normalization, type coercion, null handling, batched load into the `raw` layer.
+
 ## Approach
 
 Both notebooks follow the same shape: load CSV → normalize columns and types → convert pandas nulls (`NaT`, `pd.NA`) to SQL `NULL` → batch insert. The null conversion matters more than it looks: pandas nullable types don't translate to `psycopg2` parameters directly, and silent coercion produces rows that insert without error but hold wrong values.
